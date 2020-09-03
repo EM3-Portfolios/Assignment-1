@@ -1,7 +1,7 @@
 ---
 title: "Assignment 1 - Data Cleaning - Instructions"
-author: "[FILL IN YOUR NAME]"
-date: "[FILL IN THE DATE]"
+author: "[Gacilda Anne]"
+date: "[03/09-2020]"
 output: html_document
 ---
 
@@ -68,9 +68,7 @@ Load the three data sets, after downloading them from dropbox and saving them in
 * Word data: https://www.dropbox.com/s/8ng1civpl2aux58/token_train.csv?dl=0
 
 ```{r}
-demo_train <- read.csv("demo_train.csv")
-LU_train <- read.csv("LU_train.csv")
-token_train <- read.csv("token_train.csv")
+
 ```
 
 Explore the 3 datasets (e.g. visualize them, summarize them, etc.). You will see that the data is messy, since the psychologist collected the demographic data, the linguist analyzed the length of utterance in May 2014 and the fumbling jack-of-all-trades analyzed the words several months later. 
@@ -90,9 +88,7 @@ Tip: look through the chapter on data transformation in R for data science (http
 
 
 ```{r}
-summary(demo_train)
-summary(LU_train)
-summary(token_train)
+
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported (visit1 vs. 1).
@@ -102,8 +98,6 @@ Tip: The stringr package is what you need. str_extract () will allow you to extr
 
 ```{r}
 
-LU_train$VISIT <- str_extract(LU_train$VISIT, "\\d")
-token_train$VISIT <- str_extract(token_train$VISIT, "\\d")
 
 ```
 
