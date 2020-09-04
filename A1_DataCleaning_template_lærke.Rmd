@@ -126,8 +126,12 @@ Tip: You can either have one line of code for each child name that is to be chan
 
 
 ```{r}
+# Removing all punctuation from the columns "SUBJ" in all three data frames:
+demo_train$SUBJ <- str_replace_all(demo_train$SUBJ, "[[:punct:]]", "")
 
+LU_train$SUBJ <- str_replace_all(LU_train$SUBJ, "[[:punct:]]", "")
 
+token_train$SUBJ <- str_replace_all(token_train$SUBJ, "[[:punct:]]", "")
 ```
 
 2d. Now that the nitty gritty details of the different data sets are fixed, we want to make a subset of each data set only containig the variables that we wish to use in the final data set.
@@ -163,6 +167,18 @@ Most variables should make sense, here the less intuitive ones.
 Feel free to rename the variables into something you can remember (i.e. nonVerbalIQ, verbalIQ)
 
 ```{r}
+# Subsetting the columns that we need from each of the three data frames:
+subset2d_demo <- select(demo_train, SUBJ, VISIT, Diagnosis, Ethnicity, Gender, Age, ADOS, MullenRaw, ExpressiveLangRaw, Socialization)
+
+subset2d_LU <- select(LU_train, SUBJ, VISIT, MOT_MLU, CHI_MLU)
+
+subset2d_token <- select(token_train, SUBJ, VISIT, types_MOT, types_CHI, tokens_MOT, tokens_CHI)
+
+# Merging the two of the small subsets together into a new data frame:
+subset2d <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
+
+# Adding the last small subset to the new subset (overwriting the new subset data frame):
+subset2d <- merge(subset2d, subset2d_token, by = c("SUBJ", "VISIT"))
 
 ```
 
