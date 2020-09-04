@@ -59,7 +59,7 @@ If you're not in a project in Rstudio, make sure to set your working directory h
 If you created an RStudio project, then your working directory (the directory with your data and code for these assignments) is the project directory.
 
 ```{r}
-pacman::p_load(tidyverse,janitor)
+pacman::p_load(tidyverse,janitor, dplyr)
 ```
 
 Load the three data sets, after downloading them from dropbox and saving them in your working directory:
@@ -79,6 +79,13 @@ In particular:
 - the same variables might report the values in different ways (e.g. participant and visit IDs)
 Welcome to real world of messy data :-)
 
+```{r}
+summary(demo_train)
+summary(LU_train)
+summary(token_train)
+```
+
+
 Before being able to combine the data sets we need to make sure the relevant variables have the same names and the same kind of values.
 
 So:
@@ -90,9 +97,12 @@ Tip: look through the chapter on data transformation in R for data science (http
 
 
 ```{r}
-summary(demo_train)
-summary(LU_train)
-summary(token_train)
+# Renaming the column "Visit" in demo_train to"VISIT" match the other data frames:
+demo_train <- rename(demo_train, VISIT = Visit)
+
+# Renaming the column "Child.ID" in demo_train to"SUBJ" match the other data frames:
+demo_train <- rename(demo_train, SUBJ = Child.ID)
+
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported (visit1 vs. 1).
@@ -101,8 +111,9 @@ Tip: The stringr package is what you need. str_extract () will allow you to extr
 
 
 ```{r}
-
+# Removing the letters from all values in the columns "VISIT" in the data frames LU_train and token_train to match the values in the visit column in demo_train:
 LU_train$VISIT <- str_extract(LU_train$VISIT, "\\d")
+
 token_train$VISIT <- str_extract(token_train$VISIT, "\\d")
 
 ```
@@ -115,6 +126,7 @@ Tip: You can either have one line of code for each child name that is to be chan
 
 
 ```{r}
+
 
 ```
 
