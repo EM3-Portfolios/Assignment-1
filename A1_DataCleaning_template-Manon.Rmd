@@ -172,8 +172,6 @@ subset2d_LU <- select(LU_train, SUBJ, VISIT, MOT_MLU, CHI_MLU)
 subset2d_token <- select(token_train, SUBJ, VISIT, types_MOT, types_CHI, tokens_MOT, tokens_CHI)
 
 
-# merging 3 subsets
-# merged_set <- merge()
 ```
 
 2e. Finally we are ready to merge all the data sets into just one. 
@@ -183,7 +181,11 @@ Some things to pay attention to:
 * make sure to understand whether (and if so why) there are NAs in the dataset (e.g. some measures were not taken at all visits, some recordings were lost or permission to use was withdrawn)
 
 ```{r}
+# merging 3 subsets, 2 at a time
+merged_df <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
+merged_df <- merge(merged_df, subset2d_token, by = c("SUBJ", "VISIT"))
 
+# Do we need a master data set? nah i don't think so :-)
 
 ```
 
