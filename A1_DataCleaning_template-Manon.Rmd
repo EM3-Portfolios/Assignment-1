@@ -96,7 +96,7 @@ Tip: look through the chapter on data transformation in R for data science (http
 
 ```{r}
 # the demo_train dataset has called the first column Child.ID instead of SUBJ as the two other datasets
-
+demo_train <- dplyr::rename(demo_train, SUBJ = Child.ID)
 
 # we need to change demo_train$Visit to demo_train$VISIT
 demo_train <- dplyr::rename(demo_train, VISIT = Visit)
@@ -104,19 +104,16 @@ demo_train <- dplyr::rename(demo_train, VISIT = Visit)
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported (visit1 vs. 1).
-```{r}
-# 
-
-```
-
-
 Tip: The stringr package is what you need. str_extract () will allow you to extract only the digit (number) from a string, by using the regular expression \\d.
-
-
 ```{r}
-
+# LU_train and token_train need their values in column VISIT to only contain the numbers.
+LU_train$VISIT <- str_extract(LU_train$VISIT, "\\d")
+token_train$VISIT <- str_extract(token_train$VISIT, "\\d")
 
 ```
+
+
+
 
 2c. We also need to make a small adjustment to the content of the Child.ID coloumn in the demographic data. Within this column, names that are not abbreviations do not end with "." (i.e. Adam), which is the case in the other two data sets (i.e. Adam.). If The content of the two variables isn't identical the rows will not be merged.
 A neat way to solve the problem is simply to remove all "." in all datasets.
@@ -126,8 +123,15 @@ Tip: You can either have one line of code for each child name that is to be chan
 
 
 ```{r}
+# removing all '.' from values in column 'SUBJ' in all 3 datasets
+
+demo_train$SUBJ <- str_replace_all(demo_train$SUBJ, "[:punct:]", "")
+LU_train$SUBJ <- str_replace_all(LU_train$SUBJ, "[:punct:]", "")
+token_train$SUBJ <- str_replace_all(token_train$SUBJ, "[:punct:]", "")
 
 ```
+
+
 
 2d. Now that the nitty gritty details of the different data sets are fixed, we want to make a subset of each data set only containig the variables that we wish to use in the final data set.
 For this we use the tidyverse package dplyr, which contains the function select(). 
