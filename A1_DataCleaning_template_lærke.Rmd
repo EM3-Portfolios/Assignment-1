@@ -174,11 +174,6 @@ subset2d_LU <- select(LU_train, SUBJ, VISIT, MOT_MLU, CHI_MLU)
 
 subset2d_token <- select(token_train, SUBJ, VISIT, types_MOT, types_CHI, tokens_MOT, tokens_CHI)
 
-# Merging the two of the small subsets together into a new data frame:
-subset2d <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
-
-# Adding the last small subset to the new subset (overwriting the new subset data frame):
-subset2d <- merge(subset2d, subset2d_token, by = c("SUBJ", "VISIT"))
 
 ```
 
@@ -190,6 +185,11 @@ Some things to pay attention to:
 
 ```{r}
 
+# Merging the two of the small subsets together into a new data frame:
+subset2d <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
+
+# Adding the last small subset to the new subset (overwriting the new subset data frame):
+subset2d <- merge(subset2d, subset2d_token, by = c("SUBJ", "VISIT"))
 
 ```
 
@@ -205,6 +205,10 @@ A possible way to do so:
 
 
 ```{r}
+# Subsetting the columns that we want to work with:
+subset2f <- select(subset2d, SUBJ, VISIT, ADOS, MullenRaw, ExpressiveLangRaw, Socialization)
+
+# Overwriting the clinical scores from visits 2-6 with the scores from visit 1 for each participant:
 
 ```
 
@@ -216,6 +220,10 @@ Now we want to
 * Save the data set using into a csv file. Hint: look into write.csv()
 
 ```{r}
+# We can anonymize the IDs by converting them first from character into factor and then from factor to numeric so that each participant ID is replaced with a number. Then we convert it back into a character:
+subset2f$Subj <- as.factor(subset2f$SUBJ)
+subset2f$Subj <- as.numeric(subset2f$Subj)
+subset2f$Subj <- as.character(subset2f$Subj)
 
 ```
 
