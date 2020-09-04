@@ -59,6 +59,7 @@ If you're not in a project in Rstudio, make sure to set your working directory h
 If you created an RStudio project, then your working directory (the directory with your data and code for these assignments) is the project directory.
 
 ```{r}
+install.packages("tidyverse")
 pacman::p_load(tidyverse,janitor)
 ```
 
@@ -68,7 +69,14 @@ Load the three data sets, after downloading them from dropbox and saving them in
 * Word data: https://www.dropbox.com/s/8ng1civpl2aux58/token_train.csv?dl=0
 
 ```{r}
+demo_train <- read.csv("demo_train.csv")
+LU_train <- read.csv("LU_train.csv")
+token_train <- read.csv("token_train.csv")
 
+
+#summary(demo_train)
+#summary(LU_train)
+#summary(token_train)
 ```
 
 Explore the 3 datasets (e.g. visualize them, summarize them, etc.). You will see that the data is messy, since the psychologist collected the demographic data, the linguist analyzed the length of utterance in May 2014 and the fumbling jack-of-all-trades analyzed the words several months later. 
@@ -89,6 +97,9 @@ Tip: look through the chapter on data transformation in R for data science (http
 
 ```{r}
 
+demo_train = dplyr::rename(demo_train, VISIT = Visit)
+demo_train = dplyr::rename(demo_train, SUBJ = Child.ID)
+
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported (visit1 vs. 1).
@@ -97,8 +108,10 @@ Tip: The stringr package is what you need. str_extract () will allow you to extr
 
 
 ```{r}
+#dataframe$colum <-str_extract(df$colum, "remove everything that is not a diget")
+LU_train$VISIT <- str_extract(LU_train$VISIT, "\\d")
 
-
+token_train$VISIT <- str_extract(token_train$VISIT, "\\d")
 ```
 
 2c. We also need to make a small adjustment to the content of the Child.ID coloumn in the demographic data. Within this column, names that are not abbreviations do not end with "." (i.e. Adam), which is the case in the other two data sets (i.e. Adam.). If The content of the two variables isn't identical the rows will not be merged.
@@ -109,6 +122,9 @@ Tip: You can either have one line of code for each child name that is to be chan
 
 
 ```{r}
+demo_train$SUBJ <- str_replace_all(demo_train$SUBJ, "[[:punct:]]", "")
+LU_train$SUBJ <- str_replace_all(LU_train$SUBJ, "[[:punct:]]", "")
+token_train$SUBJ <- str_replace_all(token_train$SUBJ, "[[:punct:]]", "")
 
 ```
 
