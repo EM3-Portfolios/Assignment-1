@@ -97,6 +97,9 @@ Tip: look through the chapter on data transformation in R for data science (http
 ```{r}
 # the demo_train dataset has called the first column Child.ID instead of SUBJ as the two other datasets
 
+# we need to change demo_train$Visit to demo_train$VISIT
+dplyr::rename(demo_train, VISIT = Visit)
+
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported (visit1 vs. 1).
