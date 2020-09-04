@@ -95,10 +95,20 @@ Tip: look through the chapter on data transformation in R for data science (http
 
 
 ```{r}
+# the demo_train dataset has called the first column Child.ID instead of SUBJ as the two other datasets
+
+
+# we need to change demo_train$Visit to demo_train$VISIT
+demo_train <- dplyr::rename(demo_train, VISIT = Visit)
 
 ```
 
 2b. Find a way to homogeneize the way "visit" is reported (visit1 vs. 1).
+```{r}
+# 
+
+```
+
 
 Tip: The stringr package is what you need. str_extract () will allow you to extract only the digit (number) from a string, by using the regular expression \\d.
 
