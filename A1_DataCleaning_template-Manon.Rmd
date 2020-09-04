@@ -173,7 +173,9 @@ subset2d_token <- select(token_train, SUBJ, VISIT, types_MOT, types_CHI, tokens_
 
 
 # merging 3 subsets
-# merged_set <- merge()
+merged_df <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
+merged_df <- merge(merged_df, subset2d_token, by = c("SUBJ", "VISIT"))
+
 ```
 
 2e. Finally we are ready to merge all the data sets into just one. 
