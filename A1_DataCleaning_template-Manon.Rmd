@@ -201,6 +201,26 @@ A possible way to do so:
 
 
 ```{r}
+# subsetting the 6 comlumns 
+subset_2f <- select(merged_df, SUBJ, VISIT, ADOS, MullenRaw, ExpressiveLangRaw, Socialization)
+
+
+
+# have a dataset with 1 row per name from the 1st visitn only and when it merges with the merged_df (after having renamed ADOS to ADOS1 etc of course) the visit 1 values hould be copied to the other 5 visits as well in columns ADOS1 etc. and stay original in the original ADOS column. remember to remove column VISIT in subset_2f before merging with merged_df.
+
+# only including visit 1 in the subset
+subset_2f <- filter(subset_2f, VISIT == 1)
+
+# deleting the visit column
+subset_2f <- select(subset_2f, -VISIT)
+
+# rename clinical measures variables
+
+
+# merging the subset_2f with merged_df
+# merged_df <- merge(merged_df, subset_2f, by = "SUBJ")
+
+
 
 ```
 
