@@ -215,12 +215,16 @@ subset_2f <- filter(subset_2f, VISIT == 1)
 subset_2f <- select(subset_2f, -VISIT)
 
 # rename clinical measures variables
-
+subset_2f <- dplyr::rename(subset_2f, ADOS1 = ADOS)
+subset_2f <- dplyr::rename(subset_2f, MullenRaw1 = MullenRaw)
+subset_2f <- dplyr::rename(subset_2f, ExpressiveLangRaw1 = ExpressiveLangRaw)
+subset_2f <- dplyr::rename(subset_2f, Socialization1 = Socialization)
 
 # merging the subset_2f with merged_df
-# merged_df <- merge(merged_df, subset_2f, by = "SUBJ")
+merged_df <- merge(merged_df, subset_2f, by = "SUBJ")
 
 
+view(merged_df$ADOS1)
 
 ```
 
