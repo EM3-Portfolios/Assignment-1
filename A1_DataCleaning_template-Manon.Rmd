@@ -220,7 +220,7 @@ subset_2f <- dplyr::rename(subset_2f, MullenRaw1 = MullenRaw)
 subset_2f <- dplyr::rename(subset_2f, ExpressiveLangRaw1 = ExpressiveLangRaw)
 subset_2f <- dplyr::rename(subset_2f, Socialization1 = Socialization)
 
-# merging the subset_2f with merged_df
+# merging the subset_2f with merged_df / 
 merged_df <- merge(merged_df, subset_2f, by = "SUBJ")
 
 
@@ -237,6 +237,12 @@ Now we want to
 
 ```{r}
 
+# We can anonymize the IDs by converting them first from character into factor and then from factor to numeric so that each participant ID is replaced with a number. Then we convert it back into a character:
+merged_df$SUBJ <- as.factor(merged_df$SUBJ)
+merged_df$SUBJ <- as.numeric(merged_df$SUBJ)
+merged_df$SUBJ <- as.character(merged_df$SUBJ)
+
+Change
 ```
 
 
