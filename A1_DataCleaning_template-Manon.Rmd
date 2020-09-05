@@ -246,7 +246,9 @@ merged_df$SUBJ <- as.character(merged_df$SUBJ)
 merged_df$Gender <- chartr("12", "MF", merged_df$Gender)
 
 # Change the diagnosis markes from A and B to ASD and TD
-
+# this function takes (old value, new value, df$column) and is easier to read than the chartr() function
+merged_df$Diagnosis <- gsub("A", "ASD", merged_df$Diagnosis)
+merged_df$Diagnosis <- gsub("B", "TD", merged_df$Diagnosis)
 
 
 # save dataset as csv file
