@@ -186,10 +186,10 @@ Some things to pay attention to:
 ```{r}
 
 # Merging the two of the small subsets together into a new data frame:
-subset2d <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
+merged_df <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
 
 # Adding the last small subset to the new subset (overwriting the new subset data frame):
-subset2d <- merge(subset2d, subset2d_token, by = c("SUBJ", "VISIT"))
+merged_df <- merge(merged_df, subset2d_token, by = c("SUBJ", "VISIT"))
 
 ```
 
@@ -206,10 +206,29 @@ A possible way to do so:
 
 ```{r}
 # Subsetting the columns that we want to work with:
-subset2f <- select(subset2d, SUBJ, VISIT, ADOS, MullenRaw, ExpressiveLangRaw, Socialization)
+subset2f <- select(merged_df, SUBJ, VISIT, ADOS, MullenRaw, ExpressiveLangRaw, Socialization)
 
 # Overwriting the clinical scores from visits 2-6 with the scores from visit 1 for each participant:
 
+# have a dataset with 1 row per name from the 1st visitn only and when it merges with the merged_df (after having renamed ADOS to ADOS1 etc of course) the visit 1 values hould be copied to the other 5 visits as well in columns ADOS1 etc. and stay original in the original ADOS column. remember to remove column VISIT in subset_2f before merging with merged_df.
+
+# only including visit 1 in the subset
+subset2f <- filter(subset2f, VISIT == 1)
+
+# deleting the visit column
+subset2f <- select(subset2f, -VISIT)
+
+# rename clinical measures variables
+subset2f <- dplyr::rename(subset2f, ADOS1 = ADOS)
+subset2f <- dplyr::rename(subset2f, MullenRaw1 = MullenRaw)
+subset2f <- dplyr::rename(subset2f, ExpressiveLangRaw1 = ExpressiveLangRaw)
+subset2f <- dplyr::rename(subset2f, Socialization1 = Socialization)
+
+# merging the subset_2f with merged_df / 
+merged_df <- merge(merged_df, subset2f, by = "SUBJ")
+
+
+# view(merged_df)
 ```
 
 2g. Final touches
@@ -221,10 +240,16 @@ Now we want to
 
 ```{r}
 # We can anonymize the IDs by converting them first from character into factor and then from factor to numeric so that each participant ID is replaced with a number. Then we convert it back into a character:
-subset2f$Subj <- as.factor(subset2f$SUBJ)
-subset2f$Subj <- as.numeric(subset2f$Subj)
-subset2f$Subj <- as.character(subset2f$Subj)
+merged_df$SUBJ <- as.factor(merged_df$SUBJ)
+merged_df$SUBJ <- as.numeric(merged_df$SUBJ)
+merged_df$SUBJ <- as.character(merged_df$SUBJ)
 
+# Renaming 1 and 2 in the gender column to M and F:
+merged_df$Gender <- gsub("12", "MF", merged_df$Gender)
+
+# Renaming A and B to ASD and TD:
+merged_df$Diagnosis <- gsub("A", "ASD", merged_df$Diagnosis)
+merged_df$Diagnosis <- gsub("B", "TD", merged_df$Diagnosis)
 ```
 
 
