@@ -245,7 +245,10 @@ merged_df$SUBJ <- as.numeric(merged_df$SUBJ)
 merged_df$SUBJ <- as.character(merged_df$SUBJ)
 
 # Renaming 1 and 2 in the gender column to M and F:
-merged_df$Gender <- gsub("12", "MF", merged_df$Gender)
+merged_df$Gender <- gsub("1", "M", merged_df$Gender)
+merged_df$Gender <- gsub("2", "F", merged_df$Gender)
+# or:    merged_df$Gender <- chartr("12", "MF", merged_df$Gender)
+
 
 # Renaming A and B to ASD and TD:
 merged_df$Diagnosis <- gsub("A", "ASD", merged_df$Diagnosis)
