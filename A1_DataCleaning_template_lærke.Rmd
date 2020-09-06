@@ -311,7 +311,7 @@ view(list1)
 # But I don't know how to convert it into a df
 
 
-# 2:
+## 2:
 
 # Creating a dataframe containing only participant ID (SUBJ), visit (VISIT), and the mean length of utterance of the kid (CHI_MLU):
 bonus2 <- select(merged_df, SUBJ, VISIT, CHI_MLU)
@@ -323,8 +323,17 @@ bonus2 <- filter(bonus2, VISIT == "1" & CHI_MLU < 1.5)
 list2 <- bonus2$SUBJ
 view(list2)
 
-# 3:
+## 3:   ##### So, this doesn't have pipes, but I think it does what it is supposed to do...
 
+# Creating a data frame showing the frequency of appearance for each subject (if the frequency is below 6 then it must mean, that the subject did not complete all trials):
+df_freq <- plyr::count(merged_df, "SUBJ")
+
+# Filtering the participants who completed less than 6 trials:
+df_freq <- filter(df_freq, freq < 6)
+
+# Making a list with the participants who did not complete all trials:
+list3 <- df_freq$SUBJ
+view(list3)
 ```
 
 
