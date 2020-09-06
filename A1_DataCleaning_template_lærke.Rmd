@@ -210,7 +210,7 @@ subset2f <- select(merged_df, SUBJ, VISIT, ADOS, MullenRaw, ExpressiveLangRaw, S
 
 # Overwriting the clinical scores from visits 2-6 with the scores from visit 1 for each participant:
 
-# have a dataset with 1 row per name from the 1st visitn only and when it merges with the merged_df (after having renamed ADOS to ADOS1 etc of course) the visit 1 values hould be copied to the other 5 visits as well in columns ADOS1 etc. and stay original in the original ADOS column. remember to remove column VISIT in subset_2f before merging with merged_df.
+# have a dataset with 1 row per name from the 1st visit only and when it merges with the merged_df (after having renamed ADOS to ADOS1 etc of course) the visit 1 values should be copied to the other 5 visits as well in columns ADOS1 etc. and stay original in the original ADOS column. remember to remove column VISIT in subset_2f before merging with merged_df.
 
 # only including visit 1 in the subset
 subset2f <- filter(subset2f, VISIT == 1)
@@ -226,6 +226,7 @@ subset2f <- dplyr::rename(subset2f, Socialization1 = Socialization)
 
 # merging the subset_2f with merged_df / 
 merged_df <- merge(merged_df, subset2f, by = "SUBJ")
+
 
 
 # view(merged_df)
@@ -256,6 +257,22 @@ merged_df$Diagnosis <- gsub("B", "TD", merged_df$Diagnosis)
 ```
 
 
+
+###### Task 2f - alternative ######
+```{r}
+# I made four ifelse statements (one for each of the clinical columns), that replace the value of the clinical column with NA if the value of the VISIT column in the same row is either 2, 3, 4, 5, or 6. This leaves us with values in the clinical column only from visit 1 of the different participants.
+merged_df$ADOS1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$ADOS1)
+merged_df$MullenRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$MullenRaw1)
+merged_df$ExpressiveLangRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$ExpressiveLangRaw1)
+merged_df$Socialization1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$Socialization1)
+
+# Just making a little new data frame to get an overview of what we did.
+new <- select(merged_df, SUBJ, VISIT, ADOS1, MullenRaw1, ExpressiveLangRaw1, Socialization1)
+
+```
+
+
+
 3) BONUS QUESTIONS
 The aim of this last section is to make sure you are fully fluent in the tidyverse.
 Here's the link to a very helpful book, which explains each function:
@@ -268,7 +285,45 @@ List all kids who:
 3. have not completed all trials. Tip: Use pipes to solve this
 
 ```{r}
+## 1:
 
+# Creating a dataframe containing only participant ID (SUBJ), and the mean length of utterance of the kid (CHI_MLU):
+bonus1 <- select(merged_df, SUBJ, CHI_MLU)
+
+# Using the aggregate function to find the mean across trials/visits for each child, and overwriting the old bonus1 data frame with these mean values:
+bonus1 <- as.data.frame(aggregate(bonus1[, 2], list(bonus1$SUBJ), mean))
+
+# This step is not really necessary, but the previous line of code renamed SUBJ to Group.1 and CHI_MLU to x, so we are just quickly going to change them back (except now we are calling CHI_MLU for CHI_MLU_across_visits):
+bonus1 <- dplyr::rename(bonus1, CHI_MLU_across_visits = x)
+bonus1 <- dplyr::rename(bonus1, SUBJ = Group.1)
+
+# Filtering the mean values that are above 2.7
+bonus1 <- filter(bonus1, CHI_MLU_across_visits > 2.7)
+
+# Making a list with the children who had mlu across visits > 2.7 (we could just show the SUBJ column, but you said to make a list, so here goes):
+list1 <- bonus1$SUBJ
+view(list1)
+
+# Or maybe:
+#bonus1 %>%
+  #group_by(SUBJ) %>%
+  #summarise(MLU_across_visits = mean(CHI_MLU))
+# But I don't know how to convert it into a df
+
+
+# 2:
+
+# Creating a dataframe containing only participant ID (SUBJ), visit (VISIT), and the mean length of utterance of the kid (CHI_MLU):
+bonus2 <- select(merged_df, SUBJ, VISIT, CHI_MLU)
+
+# Filtering the mean values from visit 1 that are below 1.5:
+bonus2 <- filter(bonus2, VISIT == "1" & CHI_MLU < 1.5)
+
+# Making a list with the children who had a mlu below 1.5 at the first visit:
+list2 <- bonus2$SUBJ
+view(list2)
+
+# 3:
 
 ```
 
