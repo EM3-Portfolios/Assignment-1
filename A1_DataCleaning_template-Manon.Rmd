@@ -224,7 +224,12 @@ subset_2f <- dplyr::rename(subset_2f, Socialization1 = Socialization)
 merged_df <- merge(merged_df, subset_2f, by = "SUBJ")
 
 
-view(merged_df$ADOS1)
+#changes to include NAs (post-answer from Byurakn)
+merged_df$ADOS1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$ADOS1)
+merged_df$MullenRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$MullenRaw1)
+merged_df$ExpressiveLangRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$ExpressiveLangRaw1)
+merged_df$Socialization1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$Socialization1)
+
 
 ```
 
