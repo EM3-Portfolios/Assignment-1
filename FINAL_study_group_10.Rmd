@@ -1,8 +1,10 @@
 ---
 title: "Assignment 1 - Data Cleaning - Instructions"
-author: "[FILL IN YOUR NAME]"
-date: "[FILL IN THE DATE]"
-output: html_document
+author: 'Alba González Herrero, Gacilda Anne, Cecilie Vestergaard, Lærke Brædder, & Manon Grandjean'
+date: '07-09-2020'
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Assignment 1, Language development in Autism Spectrum Disorder (ASD) - Brushing up your code skills
@@ -96,7 +98,7 @@ Pay particular attention to the variables indicating participant and visit.
 Tip: look through the chapter on data transformation in R for data science (http://r4ds.had.co.nz). Alternatively you can look into the package dplyr (part of tidyverse), or google "how to rename variables in R". Or check the janitor R package. There are always multiple ways of solving any problem and no absolute best method.
 
 
-```{r}
+```{r Anne}
 # Renaming the column "Visit" in demo_train to"VISIT" match the other data frames:
 demo_train <- rename(demo_train, VISIT = Visit)
 
@@ -110,8 +112,9 @@ demo_train <- rename(demo_train, SUBJ = Child.ID)
 Tip: The stringr package is what you need. str_extract () will allow you to extract only the digit (number) from a string, by using the regular expression \\d.
 
 
-```{r}
-# Removing the letters from all values in the columns "VISIT" in the data frames LU_train and token_train to match the values in the visit column in demo_train:
+```{r Anne}
+# Removing the letters from all values in the columns "VISIT" in the data frames LU_train 
+# and token_train to match the values in the visit column in demo_train:
 LU_train$VISIT <- str_extract(LU_train$VISIT, "\\d")
 
 token_train$VISIT <- str_extract(token_train$VISIT, "\\d")
@@ -125,7 +128,7 @@ Tip: stringr is helpful again. Look up str_replace_all
 Tip: You can either have one line of code for each child name that is to be changed (easier, more typing) or specify the pattern that you want to match (more complicated: look up "regular expressions", but less typing)
 
 
-```{r}
+```{r Alba}
 # Removing all punctuation from the columns "SUBJ" in all three data frames:
 demo_train$SUBJ <- str_replace_all(demo_train$SUBJ, "[[:punct:]]", "")
 
@@ -166,13 +169,15 @@ Most variables should make sense, here the less intuitive ones.
 
 Feel free to rename the variables into something you can remember (i.e. nonVerbalIQ, verbalIQ)
 
-```{r}
+```{r Alba}
 # Subsetting the columns that we need from each of the three data frames:
-subset2d_demo <- select(demo_train, SUBJ, VISIT, Diagnosis, Ethnicity, Gender, Age, ADOS, MullenRaw, ExpressiveLangRaw, Socialization)
+subset2d_demo <- select(demo_train, SUBJ, VISIT, Diagnosis, Ethnicity, Gender, Age, ADOS,
+                        MullenRaw, ExpressiveLangRaw, Socialization)
 
 subset2d_LU <- select(LU_train, SUBJ, VISIT, MOT_MLU, CHI_MLU)
 
-subset2d_token <- select(token_train, SUBJ, VISIT, types_MOT, types_CHI, tokens_MOT, tokens_CHI)
+subset2d_token <- select(token_train, SUBJ, VISIT, types_MOT, types_CHI, tokens_MOT, 
+                         tokens_CHI)
 
 
 ```
@@ -183,7 +188,7 @@ Some things to pay attention to:
 * make sure to check that the merge has included all relevant data (e.g. by comparing the number of rows)
 * make sure to understand whether (and if so why) there are NAs in the dataset (e.g. some measures were not taken at all visits, some recordings were lost or permission to use was withdrawn)
 
-```{r}
+```{r Manon}
 
 # Merging the three subsets (we are doing it two at a time:
 merged_df <- merge(subset2d_demo, subset2d_LU, by = c("SUBJ", "VISIT"))
@@ -203,18 +208,28 @@ A possible way to do so:
 
 
 
-```{r}
+```{r Cecilie & Lærke}
 # First we make copies of the clinical columns:
 merged_df$ADOS1 <- merged_df$ADOS
 merged_df$MullenRaw1 <- merged_df$MullenRaw
 merged_df$ExpressiveLangRaw1 <- merged_df$ExpressiveLangRaw
 merged_df$Socialization1 <- merged_df$Socialization
 
-# Now we make four ifelse() statements (one for each of the clinical columns), that replace the value of the clinical column with NA if the value of the VISIT column in the same row is either 2, 3, 4, 5, or 6. This leaves us with values in the clinical columns only from visit 1 for each participant:
-merged_df$ADOS1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$ADOS1)
-merged_df$MullenRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$MullenRaw1)
-merged_df$ExpressiveLangRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$ExpressiveLangRaw1)
-merged_df$Socialization1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA, merged_df$Socialization1)
+# Now we make four ifelse() statements (one for each of the clinical columns), that 
+# replace the value of the clinical column with NA if the value of the VISIT column 
+# in the same row is either 2, 3, 4, 5, or 6. This leaves us with values in the 
+# clinical columns only from visit 1 for each participant:
+merged_df$ADOS1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA,
+                         merged_df$ADOS1)
+
+merged_df$MullenRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA,
+                         merged_df$MullenRaw1)
+
+merged_df$ExpressiveLangRaw1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA,
+                         merged_df$ExpressiveLangRaw1)
+
+merged_df$Socialization1 <- ifelse(merged_df$VISIT %in% c("2", "3", "4", "5", "6"), NA,
+                         merged_df$Socialization1)
 
 # Just making a little new data frame to get an overview of what we did.
 new <- select(merged_df, SUBJ, VISIT, ADOS1, MullenRaw1, ExpressiveLangRaw1, Socialization1)
@@ -229,8 +244,10 @@ Now we want to
 * make sure the variables have sensible values. E.g. right now gender is marked 1 and 2, but in two weeks you will not be able to remember, which gender were connected to which number, so change the values from 1 and 2 to F and M in the gender variable. For the same reason, you should also change the values of Diagnosis from A and B to ASD (autism spectrum disorder) and TD (typically developing). Tip: Try taking a look at ifelse(), or google "how to rename levels in R".
 * Save the data set using into a csv file. Hint: look into write.csv()
 
-```{r}
-# We can anonymize the IDs by converting them first from character into factor and then from factor to numeric so that each participant ID is replaced with a number. Then we convert it back into a character:
+```{r Manon}
+# We can anonymize the IDs by converting them first from character into factor and then 
+# from factor to numeric so that each participant ID is replaced with a number. Then we
+# convert it back into a character:
 merged_df$SUBJ <- as.factor(merged_df$SUBJ)
 merged_df$SUBJ <- as.numeric(merged_df$SUBJ)
 merged_df$SUBJ <- as.character(merged_df$SUBJ)
@@ -266,23 +283,28 @@ List all kids who:
 2. have a mean length of utterance of less than 1.5 morphemes at the first visit
 3. have not completed all trials. Tip: Use pipes to solve this
 
-```{r}
+```{r Lærke}
 ## 1:
 
-# Creating a dataframe containing only participant ID (SUBJ), and the mean length of utterance of the kid (CHI_MLU):
+# Creating a dataframe containing only participant ID (SUBJ), and the mean length of
+# utterance of the kid (CHI_MLU):
 bonus1 <- select(merged_df, SUBJ, CHI_MLU)
 
-# Using the aggregate function to find the mean across trials/visits for each child, and overwriting the old bonus1 data frame with these mean values:
+# Using the aggregate function to find the mean across trials/visits for each child, and
+# overwriting the old bonus1 data frame with these mean values:
 bonus1 <- as.data.frame(aggregate(bonus1[, 2], list(bonus1$SUBJ), mean))
 
-# This step is not really necessary, but the previous line of code renamed SUBJ to Group.1 and CHI_MLU to x, so we are just quickly going to change them back (except now we are calling CHI_MLU for CHI_MLU_across_visits):
+# This step is not really necessary, but the previous line of code renamed SUBJ to Group.1
+# and CHI_MLU to x, so we are just quickly going to change them back (except now we are
+# calling CHI_MLU for CHI_MLU_across_visits):
 bonus1 <- dplyr::rename(bonus1, CHI_MLU_across_visits = x)
 bonus1 <- dplyr::rename(bonus1, SUBJ = Group.1)
 
 # Filtering the mean values that are above 2.7
 bonus1 <- filter(bonus1, CHI_MLU_across_visits > 2.7)
 
-# Making a list with the children who had mlu across visits > 2.7 (we could just show the SUBJ column, but you said to make a list, so here goes):
+# Making a list with the children who had mlu across visits > 2.7 (we could just show the
+# SUBJ column, but you said to make a list, so here goes):
 list1 <- bonus1$SUBJ
 view(list1)
 
@@ -290,7 +312,8 @@ view(list1)
 
 ## 2:
 
-# Creating a dataframe containing only participant ID (SUBJ), visit (VISIT), and the mean length of utterance of the kid (CHI_MLU):
+# Creating a dataframe containing only participant ID (SUBJ), visit (VISIT), and the mean
+# length of utterance of the kid (CHI_MLU):
 bonus2 <- select(merged_df, SUBJ, VISIT, CHI_MLU)
 
 # Filtering the mean values from visit 1 that are below 1.5:
@@ -302,7 +325,8 @@ view(list2)
 
 ## 3:   ##### So, this doesn't have pipes, but anyways...
 
-# Creating a data frame showing the frequency of appearance for each subject (if the frequency is below 6 then it must mean, that the subject did not complete all trials):
+# Creating a data frame showing the frequency of appearance for each subject (if the
+# frequency is below 6 then it must mean, that the subject did not complete all trials):
 df_freq <- plyr::count(merged_df, "SUBJ")
 
 # Filtering the participants who completed less than 6 trials:
@@ -339,7 +363,7 @@ USING MUTATE, SUMMARISE and PIPES
 2. Use the summarise function and pipes to add an column in the data set containing the mean amount of words produced by each trial across all visits. HINT: group by Child.ID 
 3. The solution to task above enables us to assess the average amount of words produced by each child. Why don't we just use these average values to describe the language production of the children? What is the advantage of keeping all the data?
 
-```{r}
 
 
-```
+
+
